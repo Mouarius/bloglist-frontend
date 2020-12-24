@@ -1,9 +1,17 @@
-.error-message {
+.error.message {
   border: solid 1px red;
-  background: rgba(255, 0, 0, 0.1);
-  padding: 1em;
+  background: red;
 }
-.error-message * {
+.info.message {
+  border: solid 1px black;
+  background: black;
+}
+.message {
   margin: 0;
   padding-left: 1em;
+  /* padding: 1em; */
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+    'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  color: white;
+  border-radius: 10px;
 }
