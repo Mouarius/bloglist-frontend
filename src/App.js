@@ -38,7 +38,10 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setNotificationMessage({ type: 'error', content: 'Wrong credentials' })
+      setNotificationMessage({
+        type: 'error',
+        content: exception.response.data.error,
+      })
       setTimeout(() => setNotificationMessage(null), 5000)
     }
   }
@@ -53,6 +56,11 @@ const App = () => {
         url: newBlogUrl,
       }
       const newBlog = await blogService.create(blog)
+      setNotificationMessage({
+        type: 'info',
+        content: `The blog ${newBlog.title} by ${newBlog.author} has been created !`,
+      })
+      setTimeout(() => setNotificationMessage(null), 5000)
       setBlogs(blogs.concat(newBlog))
       setNewBlogTitle('')
       setNewBlogUrl('')
@@ -60,8 +68,7 @@ const App = () => {
     } catch (exception) {
       setNotificationMessage({
         type: 'error',
-        content: 'Wrong blog content :',
-        exception,
+        content: exception.response.data.error,
       })
       setTimeout(() => setNotificationMessage(null), 5000)
     }
