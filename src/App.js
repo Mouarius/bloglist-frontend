@@ -4,6 +4,8 @@ import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './App.css'
+import LoginForm from './components/LoginForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -80,31 +82,6 @@ const App = () => {
     setUser(null)
   }
 
-  const loginForm = () => (
-    <div id="login-form">
-      <form onSubmit={handleLogin}>
-        <div>
-          Username:
-          <input
-            type="text"
-            value={username}
-            name="Username"
-            onChange={({ target }) => setUsername(target.value)}
-          />
-        </div>
-        <div>
-          Password:
-          <input
-            type="password"
-            value={password}
-            name="Password"
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </div>
-        <button type="submit">login</button>
-      </form>
-    </div>
-  )
   const blogForm = () => {
     return (
       <div id="blog-form">
@@ -141,6 +118,19 @@ const App = () => {
       </div>
     )
   }
+
+  const loginForm = () => (
+    <div>
+      <h2>log in to the app</h2>
+      <LoginForm
+        username={username}
+        password={password}
+        handleUsernameChange={({ target }) => setUsername(target.value)}
+        handlePasswordChange={({ target }) => setPassword(target.value)}
+        handleLogin={handleLogin}
+      />
+    </div>
+  )
   const blogsList = () => (
     <div>
       {blogs.map((blog) => (
@@ -158,10 +148,7 @@ const App = () => {
     <div>
       <Notification message={notificationMessage} />
       {user === null ? (
-        <div>
-          <h2>log in to the app</h2>
-          {loginForm()}
-        </div>
+        loginForm()
       ) : (
         <div>
           <h2>blogs</h2>
