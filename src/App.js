@@ -17,6 +17,8 @@ const App = () => {
     const credentials = { username, password }
     try {
       const user = await loginService.login(credentials)
+      window.localStorage.setItem('loggedBloglistUser', JSON.stringify(user))
+      console.log(`Saved the user : ${JSON.stringify(user)}`)
       setUser(user)
       setUsername('')
       setPassword('')
@@ -30,9 +32,22 @@ const App = () => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
   }, [])
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
+    if (loggedUserJSON) {
+      const loggedUser = JSON.parse(loggedUserJSON)
+      setUser(loggedUser)
+    }
+  }, [])
+
+  const logout = (event) => {
+    event.preventDefault()
+    window.localStorage.removeItem('loggedBloglistUser')
+    setUser(null)
+  }
+
   const loginForm = () => (
     <div id="login-form">
-      <h2>login</h2>
       <form onSubmit={handleLogin}>
         <div>
           Username:
@@ -58,25 +73,35 @@ const App = () => {
   )
   const blogsList = () => (
     <div>
-      <h2>blogs</h2>
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
     </div>
   )
-  const loginInfo = () => <p>{user.name} is logged in.</p>
+  const loginInfo = () => (
+    <p>
+      {user.name} is logged in. <button onClick={logout}>log out</button>
+    </p>
+  )
 
-  if (user === null) {
-    return loginForm()
-  } else {
-    return (
-      <div>
-        {loginInfo()}
-        {blogsList()}
-        <Notification message={notificationMessage} />
-      </div>
-    )
-  }
+  return (
+    <div>
+      {user === null ? (
+        <div>
+          <h2>log in to the app</h2>
+          {loginForm()}
+        </div>
+      ) : (
+        <div>
+          <h2>blogs</h2>
+          {loginInfo()}
+          {blogsList()}
+        </div>
+      )}
+
+      <Notification message={notificationMessage} />
+    </div>
+  )
 }
 
 export default App
