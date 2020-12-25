@@ -15,3 +15,28 @@
   color: white;
   border-radius: 10px;
 }
+.blog {
+  border: solid 1pt black;
+  max-width: 500px;
+  margin: 2pt;
+  padding: 2pt;
+  overflow: hidden;
+  position: relative;
+}
+.blog button {
+  margin-left: 1em;
+  background: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+  right: 2pt;
+  position: absolute;
+  display: inline-block;
+  width: 50px;
+}
+.blog-details ul,
+li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
