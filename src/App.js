@@ -33,9 +33,13 @@ const App = () => {
     event.preventDefault()
     const credentials = { username, password }
     try {
-      const user = await loginService.login(credentials)
-      window.localStorage.setItem('loggedBloglistUser', JSON.stringify(user))
-      setUser(user)
+      const userToLogin = await loginService.login(credentials)
+      window.localStorage.setItem(
+        'loggedBloglistUser',
+        JSON.stringify(userToLogin)
+      )
+      console.log('userToLogin :>> ', userToLogin)
+      setUser(userToLogin)
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -65,6 +69,21 @@ const App = () => {
     }
   }
 
+  const addLikeTo = async (id) => {
+    try {
+      const blogToModify = blogs.find((blog) => blog.id === id)
+      blogToModify.likes += 1
+      const modifiedBlog = await blogService.update(blogToModify)
+      setBlogs(blogs.map((blog) => (blog.id === id ? modifiedBlog : blog)))
+    } catch (exception) {
+      setNotificationMessage({
+        type: 'error',
+        content: exception,
+      })
+      setTimeout(() => setNotificationMessage(null), 5000)
+    }
+  }
+
   const logout = (event) => {
     event.preventDefault()
     window.localStorage.removeItem('loggedBloglistUser')
@@ -87,14 +106,18 @@ const App = () => {
         password={password}
         handleUsernameChange={({ target }) => setUsername(target.value)}
         handlePasswordChange={({ target }) => setPassword(target.value)}
-        handleLogin={handleLogin}
+        handleSubmit={handleLogin}
       />
     </div>
   )
   const blogsList = () => (
     <div>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          handleLikeButton={() => addLikeTo(blog.id)}
+        />
       ))}
     </div>
   )

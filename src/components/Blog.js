@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleLikeButton }) => {
   const [detailed, setDetailed] = useState(false)
 
   const showWhenVisible = { display: detailed ? '' : 'none' }
@@ -8,6 +8,7 @@ const Blog = ({ blog }) => {
   const toggleDetails = () => {
     setDetailed(!detailed)
   }
+
   return (
     <div className="blog">
       <strong>{blog.title}</strong> - {blog.author}
@@ -17,7 +18,10 @@ const Blog = ({ blog }) => {
           <li>
             <a href={blog.url}>{blog.url}</a>
           </li>
-          <li>likes : {blog.likes}</li>
+          <li>
+            likes : {blog.likes}
+            <button onClick={handleLikeButton}>like</button>
+          </li>
           <li> {blog.user.name}</li>
         </ul>
       </div>

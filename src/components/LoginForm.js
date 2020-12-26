@@ -5,11 +5,11 @@ const LoginForm = ({
   password,
   handleUsernameChange,
   handlePasswordChange,
-  handleLogin,
+  handleSubmit,
 }) => {
   return (
     <div id="login-form">
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleSubmit}>
         <div>
           Username:
           <input
