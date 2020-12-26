@@ -17,8 +17,12 @@ const App = () => {
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    blogService.getAll().then((blogs) => setBlogs(sortBlogsByLikes(blogs)))
   }, [])
+
+  useEffect(() => {
+    setBlogs(sortBlogsByLikes(blogs))
+  }, [blogs])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
@@ -51,6 +55,10 @@ const App = () => {
     }
   }
 
+  const sortBlogsByLikes = (blogs) => {
+    return blogs.sort((blog1, blog2) => blog2.likes - blog1.likes)
+  }
+
   const addBlog = async (blog) => {
     try {
       const newBlog = await blogService.create(blog)
@@ -74,7 +82,10 @@ const App = () => {
       const blogToModify = blogs.find((blog) => blog.id === id)
       blogToModify.likes += 1
       const modifiedBlog = await blogService.update(blogToModify)
-      setBlogs(blogs.map((blog) => (blog.id === id ? modifiedBlog : blog)))
+      const updatedBlogs = blogs.map((blog) =>
+        blog.id === id ? modifiedBlog : blog
+      )
+      setBlogs(updatedBlogs)
     } catch (exception) {
       setNotificationMessage({
         type: 'error',
