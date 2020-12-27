@@ -95,21 +95,26 @@ const App = () => {
   }
 
   const deleteBlog = async (id) => {
-    try {
-      const blogToDelete = blogs.find((blog) => blog.id === id)
-      await blogService.remove(id)
-      setBlogs(blogs.filter((blog) => blog.id !== id))
-      setNotificationMessage({
-        type: 'info',
-        content: `The blog ${blogToDelete.title} has been deleted.`,
-      })
-      setTimeout(() => setNotificationMessage(null), 5000)
-    } catch (e) {
-      setNotificationMessage({
-        type: 'error',
-        content: e.response.data.error,
-      })
-      setTimeout(() => setNotificationMessage(null), 5000)
+    const blogToDelete = blogs.find((blog) => blog.id === id)
+    const confirmation = window.confirm(
+      `Are you sure you want to delete ${blogToDelete.title} by ${blogToDelete.author}`
+    )
+    if (confirmation) {
+      try {
+        await blogService.remove(id)
+        setBlogs(blogs.filter((blog) => blog.id !== id))
+        setNotificationMessage({
+          type: 'info',
+          content: `The blog ${blogToDelete.title} has been deleted.`,
+        })
+        setTimeout(() => setNotificationMessage(null), 5000)
+      } catch (e) {
+        setNotificationMessage({
+          type: 'error',
+          content: e.response.data.error,
+        })
+        setTimeout(() => setNotificationMessage(null), 5000)
+      }
     }
   }
 
