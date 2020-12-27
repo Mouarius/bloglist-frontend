@@ -21,10 +21,6 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    setBlogs(sortBlogsByLikes(blogs))
-  }, [blogs])
-
-  useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
     if (loggedUserJSON) {
       const loggedUser = JSON.parse(loggedUserJSON)
@@ -42,7 +38,6 @@ const App = () => {
         'loggedBloglistUser',
         JSON.stringify(userToLogin)
       )
-      console.log('userToLogin :>> ', userToLogin)
       setUser(userToLogin)
       setUsername('')
       setPassword('')
@@ -56,7 +51,11 @@ const App = () => {
   }
 
   const sortBlogsByLikes = (blogs) => {
-    return blogs.sort((blog1, blog2) => blog2.likes - blog1.likes)
+    console.log(`Appelé`)
+    const sortedBlogs = [...blogs].sort(
+      (blog1, blog2) => blog2.likes - blog1.likes
+    )
+    return sortedBlogs
   }
 
   const addBlog = async (blog) => {
@@ -85,11 +84,30 @@ const App = () => {
       const updatedBlogs = blogs.map((blog) =>
         blog.id === id ? modifiedBlog : blog
       )
-      setBlogs(updatedBlogs)
+      setBlogs(sortBlogsByLikes(updatedBlogs))
     } catch (exception) {
       setNotificationMessage({
         type: 'error',
         content: exception,
+      })
+      setTimeout(() => setNotificationMessage(null), 5000)
+    }
+  }
+
+  const deleteBlog = async (id) => {
+    try {
+      const blogToDelete = blogs.find((blog) => blog.id === id)
+      await blogService.remove(id)
+      setBlogs(blogs.filter((blog) => blog.id !== id))
+      setNotificationMessage({
+        type: 'info',
+        content: `The blog ${blogToDelete.title} has been deleted.`,
+      })
+      setTimeout(() => setNotificationMessage(null), 5000)
+    } catch (e) {
+      setNotificationMessage({
+        type: 'error',
+        content: e.response.data.error,
       })
       setTimeout(() => setNotificationMessage(null), 5000)
     }
@@ -121,6 +139,7 @@ const App = () => {
       />
     </div>
   )
+
   const blogsList = () => (
     <div>
       {blogs.map((blog) => (
@@ -128,6 +147,8 @@ const App = () => {
           key={blog.id}
           blog={blog}
           handleLikeButton={() => addLikeTo(blog.id)}
+          handleDeleteButton={() => deleteBlog(blog.id)}
+          loggedUser={user}
         />
       ))}
     </div>

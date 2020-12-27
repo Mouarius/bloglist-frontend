@@ -1,3 +1,6 @@
+body {
+  font-family: 'Courier New', Courier, monospace;
+}
 .error.message {
   border: solid 1px red;
   background: red;
@@ -23,16 +26,25 @@
   overflow: hidden;
   position: relative;
 }
+.blog .button-visibility {
+  right: 2pt;
+  position: absolute;
+}
 .blog button {
   margin-left: 1em;
   background: black;
   color: white;
   border: none;
   cursor: pointer;
-  right: 2pt;
-  position: absolute;
+  min-width: 50px;
+  box-sizing: border-box;
+  border: solid 1px black;
   display: inline-block;
-  width: 50px;
+  transition: all 0.1s;
+}
+.blog button:hover {
+  background-color: white;
+  color: black;
 }
 .blog-details ul,
 li {
