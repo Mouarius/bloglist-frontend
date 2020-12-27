@@ -30,8 +30,17 @@ body {
   right: 2pt;
   position: absolute;
 }
-.blog button {
+.blog .button-likes {
   margin-left: 1em;
+}
+.blog .button-remove {
+  background: red;
+  border-color: red;
+}
+.blog .button-remove:hover {
+  color: red;
+}
+.blog button {
   background: black;
   color: white;
   border: none;
@@ -46,6 +55,7 @@ body {
   background-color: white;
   color: black;
 }
+
 .blog-details ul,
 li {
   margin: 0;
