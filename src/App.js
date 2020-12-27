@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
@@ -15,6 +15,8 @@ const App = () => {
   const [username, setUsername] = useState([])
   const [password, setPassword] = useState([])
   const [user, setUser] = useState(null)
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(sortBlogsByLikes(blogs)))
@@ -51,7 +53,6 @@ const App = () => {
   }
 
   const sortBlogsByLikes = (blogs) => {
-    console.log(`Appelé`)
     const sortedBlogs = [...blogs].sort(
       (blog1, blog2) => blog2.likes - blog1.likes
     )
@@ -59,6 +60,7 @@ const App = () => {
   }
 
   const addBlog = async (blog) => {
+    blogFormRef.current.toggleVisibility()
     try {
       const newBlog = await blogService.create(blog)
       setNotificationMessage({
@@ -126,7 +128,7 @@ const App = () => {
 
   const blogForm = () => {
     return (
-      <Togglable buttonLabel="add blog">
+      <Togglable ref={blogFormRef} buttonLabel="add blog">
         <BlogForm createBlog={addBlog} />
       </Togglable>
     )
