@@ -5,12 +5,21 @@ import { render, fireEvent } from '@testing-library/react'
 
 describe('<Blog />', () => {
   let component
+  const handleLikeClick = jest.fn()
+  const handleRemoveClick = jest.fn()
+
   const blog = {
     title: 'The title is shown',
     author: 'React Tester',
   }
   beforeEach(() => {
-    component = render(<Blog blog={blog} />)
+    component = render(
+      <Blog
+        blog={blog}
+        handleLikeButton={handleLikeClick}
+        handleDeleteButton={handleRemoveClick}
+      />
+    )
   })
   test('renders title and author name only by default', () => {
     const blogTitle = component.container.querySelector('.blog-title')
@@ -25,5 +34,11 @@ describe('<Blog />', () => {
     const blogDetails = component.container.querySelector('.blog-details')
 
     expect(blogDetails).not.toHaveStyle('display:none')
+  })
+  test('like button should be called twice', () => {
+    const likeButton = component.container.querySelector('.button-likes')
+    fireEvent.click(likeButton)
+    fireEvent.click(likeButton)
+    expect(handleLikeClick.mock.calls.length).toBe(2)
   })
 })
