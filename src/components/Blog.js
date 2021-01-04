@@ -8,7 +8,7 @@ const Blog = ({ blog, handleLikeButton, handleDeleteButton, loggedUser }) => {
   const buttonLabel = detailed ? 'hide' : 'view'
 
   const removeButton = () => {
-    if (loggedUser.id === blog.user.id) {
+    if (loggedUser && loggedUser.id === blog.user.id) {
       return (
         <li>
           <button className="button-remove" onClick={handleDeleteButton}>
@@ -26,22 +26,22 @@ const Blog = ({ blog, handleLikeButton, handleDeleteButton, loggedUser }) => {
 
   return (
     <div className="blog">
-      <strong>{blog.title}</strong> - {blog.author}
+      <h3 className="blog-title">{blog.title}</h3> -{' '}
+      <span className="blog-author">{blog.author}</span>
       <button className="button-visibility" onClick={toggleDetails}>
         {buttonLabel}
       </button>
       <div className="blog-details" style={showWhenVisible}>
         <ul>
-          <li>
+          <li className="blog-url">
             <a href={blog.url}>{blog.url}</a>
           </li>
-          <li>
+          <li className="blog-likes">
             likes : {blog.likes}
             <button className="button-likes" onClick={handleLikeButton}>
               like
             </button>
           </li>
-          <li> {blog.user.name}</li>
           {removeButton()}
         </ul>
       </div>
@@ -51,9 +51,9 @@ const Blog = ({ blog, handleLikeButton, handleDeleteButton, loggedUser }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  handleLikeButton: PropTypes.func.isRequired,
-  handleDeleteButton: PropTypes.func.isRequired,
-  loggedUser: PropTypes.object.isRequired,
+  // handleLikeButton: PropTypes.func.isRequired,
+  // handleDeleteButton: PropTypes.func.isRequired,
+  // loggedUser: PropTypes.object.isRequired,
 }
 
 export default Blog

@@ -26,6 +26,9 @@ body {
   overflow: hidden;
   position: relative;
 }
+.blog-title {
+  display: inline;
+}
 .blog .button-visibility {
   right: 2pt;
   position: absolute;
