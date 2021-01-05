@@ -25,14 +25,25 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('login', (username, password) => {
-  const user = {
-    username: username,
-    name: 'Marius Menault',
-    password: password,
+  cy.request('POST', 'http://localhost:3000/api/login', {
+    username,
+    password,
+  }).then((response) => {
+    localStorage.setItem('loggedBloglistUser', JSON.stringify(response.body))
+    cy.visit('http://localhost:3000')
+  })
+})
+Cypress.Commands.add('createBlog', ({ title, author, url, likes }) => {
+  const request = {
+    url: 'http://localhost:3000/api/blogs',
+    method: 'POST',
+    body: { title, author, url, likes },
+    headers: {
+      Authorization: `bearer ${
+        JSON.parse(localStorage.getItem('loggedBloglistUser')).token
+      }`,
+    },
   }
-  cy.request('POST', 'http://localhost:3000/api/users/', user).then(
-    (response) => {
-      localStorage.setItem('loggedNoteappUser', JSON.stringify(response.body))
-    }
-  )
+  cy.request({ ...request })
+  cy.visit('http://localhost:3000')
 })
