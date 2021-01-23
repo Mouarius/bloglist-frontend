@@ -1,6 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
-import Notification from './components/Notification'
+
+import { useSelector, useDispatch } from 'react-redux'
+
+import Notification from './features/notification/Notification'
+import {
+  sendInfoMessage,
+  sendErrorMessage,
+  removeNotification,
+  selectNotificationContent,
+} from './features/notification/notificationSlice'
+
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './App.css'
@@ -9,8 +19,11 @@ import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 
 const App = () => {
+  const dispatch = useDispatch()
+  const notificationMessage = useSelector((state) => state.notification.content)
+
   const [blogs, setBlogs] = useState([])
-  const [notificationMessage, setNotificationMessage] = useState(null)
+  // const [notificationMessage, setNotificationMessage] = useState(null)
 
   const [username, setUsername] = useState([])
   const [password, setPassword] = useState([])
@@ -44,11 +57,12 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setNotificationMessage({
-        type: 'error',
-        content: exception.response.data.error,
-      })
-      setTimeout(() => setNotificationMessage(null), 5000)
+      dispatch(sendErrorMessage(exception.response.data.error))
+      // setNotificationMessage({
+      //   type: 'error',
+      //   content: exception.response.data.error,
+      // })
+      setTimeout(() => dispatch(removeNotification()), 5000)
     }
   }
 
@@ -63,18 +77,25 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
     try {
       const newBlog = await blogService.create(blog)
-      setNotificationMessage({
-        type: 'info',
-        content: `The blog ${newBlog.title} by ${newBlog.author} has been created !`,
-      })
-      setTimeout(() => setNotificationMessage(null), 5000)
+      dispatch(
+        sendInfoMessage(
+          `The blog ${newBlog.title} by ${newBlog.author} has been created !`
+        )
+      )
+      // setNotificationMessage({
+      //   type: 'info',
+      //   content: `The blog ${newBlog.title} by ${newBlog.author} has been created !`,
+      // })
+      setTimeout(() => dispatch(removeNotification()), 5000)
       setBlogs(blogs.concat(newBlog))
     } catch (exception) {
-      setNotificationMessage({
-        type: 'error',
-        content: exception.response.data.error,
-      })
-      setTimeout(() => setNotificationMessage(null), 5000)
+      dispatch(sendErrorMessage(exception.response.data.error))
+
+      // setNotificationMessage({
+      //   type: 'error',
+      //   content: exception.response.data.error,
+      // })
+      setTimeout(() => dispatch(removeNotification()), 5000)
     }
   }
 
@@ -88,11 +109,12 @@ const App = () => {
       )
       setBlogs(sortBlogsByLikes(updatedBlogs))
     } catch (exception) {
-      setNotificationMessage({
-        type: 'error',
-        content: exception,
-      })
-      setTimeout(() => setNotificationMessage(null), 5000)
+      dispatch(sendErrorMessage(exception))
+      // setNotificationMessage({
+      //   type: 'error',
+      //   content: exception,
+      // })
+      setTimeout(() => dispatch(removeNotification()), 5000)
     }
   }
 
@@ -105,17 +127,22 @@ const App = () => {
       try {
         await blogService.remove(id)
         setBlogs(blogs.filter((blog) => blog.id !== id))
-        setNotificationMessage({
-          type: 'info',
-          content: `The blog ${blogToDelete.title} has been deleted.`,
-        })
-        setTimeout(() => setNotificationMessage(null), 5000)
+        dispatch(
+          sendInfoMessage(`The blog ${blogToDelete.title} has been deleted.`)
+        )
+
+        // setNotificationMessage({
+        //   type: 'info',
+        //   content: `The blog ${blogToDelete.title} has been deleted.`,
+        // })
+        setTimeout(() => dispatch(removeNotification()), 5000)
       } catch (e) {
-        setNotificationMessage({
-          type: 'error',
-          content: e.response.data.error,
-        })
-        setTimeout(() => setNotificationMessage(null), 5000)
+        dispatch(sendErrorMessage(e.response.data.error))
+        // setNotificationMessage({
+        //   type: 'error',
+        //   content: e.response.data.error,
+        // })
+        setTimeout(() => dispatch(removeNotification()), 5000)
       }
     }
   }
@@ -168,7 +195,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={notificationMessage} />
+      <Notification />
       {user === null ? (
         loginForm()
       ) : (
