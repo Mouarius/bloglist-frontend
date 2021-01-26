@@ -1,8 +1,17 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
+import { addLikeToBlog, addLikeToBlogWithID } from './blogsSlice'
+import {
+  removeNotification,
+  sendErrorMessage,
+} from '../notification/notificationSlice'
+import { unwrapResult } from '@reduxjs/toolkit'
 
-const Blog = ({ blog, handleLikeButton, handleDeleteButton, loggedUser }) => {
+const Blog = ({ blog, handleDeleteButton, loggedUser }) => {
   const [detailed, setDetailed] = useState(false)
+
+  const dispatch = useDispatch()
 
   const showWhenVisible = { display: detailed ? '' : 'none' }
   const buttonLabel = detailed ? 'hide' : 'view'
@@ -22,6 +31,15 @@ const Blog = ({ blog, handleLikeButton, handleDeleteButton, loggedUser }) => {
 
   const toggleDetails = () => {
     setDetailed(!detailed)
+  }
+
+  const handleLikeButton = () => {
+    dispatch(addLikeToBlog(blog))
+      .then(unwrapResult)
+      .catch((error) => {
+        dispatch(sendErrorMessage(error.message))
+        setTimeout(() => dispatch(removeNotification()), 5000)
+      })
   }
 
   return (
