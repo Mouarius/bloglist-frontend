@@ -13,6 +13,7 @@ export const createNewBlog = createAsyncThunk(
   'blogs/createNewBlogStatus',
   async (blogToCreate, thunkAPI) => {
     const newBlog = await blogService.create(blogToCreate)
+    return newBlog
   }
 )
 
@@ -45,6 +46,9 @@ const blogsSlice = createSlice({
       return state.map((blog) =>
         blog.id === action.payload.id ? action.payload : blog
       )
+    },
+    [createNewBlog.fulfilled]: (state, action) => {
+      return state.concat(action.payload)
     },
   },
 })

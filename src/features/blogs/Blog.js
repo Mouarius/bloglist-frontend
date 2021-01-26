@@ -37,8 +37,7 @@ const Blog = ({ blog, handleDeleteButton, loggedUser }) => {
     dispatch(addLikeToBlog(blog))
       .then(unwrapResult)
       .catch((error) => {
-        dispatch(sendErrorMessage(error.message))
-        setTimeout(() => dispatch(removeNotification()), 5000)
+        sendErrorMessage(dispatch, error.message)
       })
   }
 

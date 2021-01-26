@@ -1,16 +1,30 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { addNewBlog } from '../features/blogs/blogsSlice'
+import { addNewBlog, createNewBlog } from '../features/blogs/blogsSlice'
+import { unwrapResult } from '@reduxjs/toolkit'
+import { sendErrorMessage } from '../features/notification/notificationSlice'
 
 const BlogForm = ({ createBlog }) => {
   const [newBlogTitle, setNewBlogTitle] = useState('')
   const [newBlogUrl, setNewBlogUrl] = useState('')
   const [newBlogAuthor, setNewBlogAuthor] = useState('')
 
+  const dispatch = useDispatch()
+
   const addBlog = (event) => {
     event.preventDefault()
-    createBlog({ title: newBlogTitle, author: newBlogAuthor, url: newBlogUrl })
+    dispatch(
+      createNewBlog({
+        title: newBlogTitle,
+        author: newBlogAuthor,
+        url: newBlogUrl,
+      })
+    )
+      .then(unwrapResult)
+      .catch((error) => {
+        sendErrorMessage(dispatch, error.message)
+      })
     setNewBlogTitle('')
     setNewBlogAuthor('')
     setNewBlogUrl('')
