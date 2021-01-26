@@ -13,7 +13,6 @@ import Blog from './features/blogs/Blog'
 import {
   setBlogs,
   selectBlogs,
-  addNewBlog,
   initializeBlogs,
 } from './features/blogs/blogsSlice'
 
@@ -61,8 +60,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      dispatch(sendErrorMessage(exception.response.data.error))
-      setTimeout(() => dispatch(removeNotification()), 5000)
+      sendErrorMessage(dispatch, exception.response.data.error)
     }
   }
 
@@ -77,16 +75,12 @@ const App = () => {
     blogFormRef.current.toggleVisibility()
     try {
       const newBlog = await blogService.create(blog)
-      dispatch(
-        sendInfoMessage(
-          `The blog ${newBlog.title} by ${newBlog.author} has been created !`
-        )
+      sendInfoMessage(
+        dispatch,
+        `The blog ${newBlog.title} by ${newBlog.author} has been created !`
       )
-      setTimeout(() => dispatch(removeNotification()), 5000)
-      dispatch(addNewBlog(newBlog))
     } catch (exception) {
-      dispatch(sendErrorMessage(exception.response.data.error))
-      setTimeout(() => dispatch(removeNotification()), 5000)
+      sendErrorMessage(dispatch, exception.response.data.error)
     }
   }
 
@@ -98,11 +92,8 @@ const App = () => {
       const updatedBlogs = blogs.map((blog) =>
         blog.id === id ? modifiedBlog : blog
       )
-      // dispatch(setBlogs(sortBlogsByLikes(updatedBlogs)))
-      //dispatch(sendErrorMessage('hello'))
     } catch (exception) {
-      dispatch(sendErrorMessage(exception))
-      setTimeout(() => dispatch(removeNotification()), 5000)
+      sendErrorMessage(dispatch, exception)
     }
   }
 
@@ -115,13 +106,12 @@ const App = () => {
       try {
         await blogService.remove(id)
         dispatch(setBlogs(blogs.filter((blog) => blog.id !== id)))
-        dispatch(
-          sendInfoMessage(`The blog ${blogToDelete.title} has been deleted.`)
+        sendInfoMessage(
+          dispatch,
+          `The blog ${blogToDelete.title} has been deleted.`
         )
-        setTimeout(() => dispatch(removeNotification()), 5000)
       } catch (e) {
-        dispatch(sendErrorMessage(e.response.data.error))
-        setTimeout(() => dispatch(removeNotification()), 5000)
+        sendErrorMessage(dispatch, e.response.data.error)
       }
     }
   }

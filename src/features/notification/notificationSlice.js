@@ -1,4 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { useDispatch } from 'react-redux'
+
+const duration = 5000
+
+export const sendErrorMessage = (dispatch, message) => {
+  dispatch(setErrorMessage(message))
+  setTimeout(() => dispatch(removeNotification()), duration)
+}
+export const sendInfoMessage = (dispatch, message) => {
+  dispatch(setInfoMessage(message))
+  setTimeout(() => dispatch(removeNotification()), duration)
+}
 
 const notificationSlice = createSlice({
   name: 'notification',
@@ -13,11 +25,11 @@ const notificationSlice = createSlice({
     setType: (state, action) => {
       state.type = action.type
     },
-    sendErrorMessage: (state, action) => {
+    setErrorMessage: (state, action) => {
       state.type = 'error'
       state.content = action.payload
     },
-    sendInfoMessage: (state, action) => {
+    setInfoMessage: (state, action) => {
       state.type = 'info'
       state.content = action.payload
     },
@@ -33,8 +45,8 @@ export const selectNotificationContent = (state) => state.notification
 export const {
   setContent,
   setType,
-  sendErrorMessage,
-  sendInfoMessage,
+  setErrorMessage,
+  setInfoMessage,
   removeNotification,
 } = notificationSlice.actions
 export default notificationSlice.reducer
