@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { addNewBlog, createNewBlog } from '../features/blogs/blogsSlice'
+import { createNewBlog } from '../features/blogs/blogsSlice'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { sendErrorMessage } from '../features/notification/notificationSlice'
 
-const BlogForm = ({ createBlog }) => {
+const BlogForm = () => {
   const [newBlogTitle, setNewBlogTitle] = useState('')
   const [newBlogUrl, setNewBlogUrl] = useState('')
   const [newBlogAuthor, setNewBlogAuthor] = useState('')
@@ -66,7 +65,5 @@ const BlogForm = ({ createBlog }) => {
     </div>
   )
 }
-
-BlogForm.propTypes = { createBlog: PropTypes.func.isRequired }
 
 export default BlogForm

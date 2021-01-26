@@ -3,17 +3,13 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import Notification from './features/notification/Notification'
-import {
-  sendInfoMessage,
-  sendErrorMessage,
-  removeNotification,
-} from './features/notification/notificationSlice'
+import { sendErrorMessage } from './features/notification/notificationSlice'
 
 import Blog from './features/blogs/Blog'
 import {
-  setBlogs,
   selectBlogs,
   initializeBlogs,
+  sortBlogs,
 } from './features/blogs/blogsSlice'
 
 import blogService from './services/blogs'
@@ -35,7 +31,11 @@ const App = () => {
   const blogFormRef = useRef()
 
   useEffect(() => {
-    dispatch(initializeBlogs())
+    const fetchBlogs = async () => {
+      await dispatch(initializeBlogs())
+      dispatch(sortBlogs())
+    }
+    fetchBlogs()
   }, [])
 
   useEffect(() => {
@@ -64,58 +64,6 @@ const App = () => {
     }
   }
 
-  const sortBlogsByLikes = (blogs) => {
-    const sortedBlogs = [...blogs].sort(
-      (blog1, blog2) => blog2.likes - blog1.likes
-    )
-    return sortedBlogs
-  }
-
-  const addBlog = async (blog) => {
-    blogFormRef.current.toggleVisibility()
-    try {
-      const newBlog = await blogService.create(blog)
-      sendInfoMessage(
-        dispatch,
-        `The blog ${newBlog.title} by ${newBlog.author} has been created !`
-      )
-    } catch (exception) {
-      sendErrorMessage(dispatch, exception.response.data.error)
-    }
-  }
-
-  const addLikeTo = async (id) => {
-    try {
-      const blogToModify = blogs.find((blog) => blog.id === id)
-      blogToModify.likes += 1
-      const modifiedBlog = await blogService.update(blogToModify)
-      const updatedBlogs = blogs.map((blog) =>
-        blog.id === id ? modifiedBlog : blog
-      )
-    } catch (exception) {
-      sendErrorMessage(dispatch, exception)
-    }
-  }
-
-  const deleteBlog = async (id) => {
-    const blogToDelete = blogs.find((blog) => blog.id === id)
-    const confirmation = window.confirm(
-      `Are you sure you want to delete ${blogToDelete.title} by ${blogToDelete.author}`
-    )
-    if (confirmation) {
-      try {
-        await blogService.remove(id)
-        dispatch(setBlogs(blogs.filter((blog) => blog.id !== id)))
-        sendInfoMessage(
-          dispatch,
-          `The blog ${blogToDelete.title} has been deleted.`
-        )
-      } catch (e) {
-        sendErrorMessage(dispatch, e.response.data.error)
-      }
-    }
-  }
-
   const logout = (event) => {
     event.preventDefault()
     window.localStorage.removeItem('loggedBloglistUser')
@@ -125,7 +73,7 @@ const App = () => {
   const blogForm = () => {
     return (
       <Togglable ref={blogFormRef} buttonLabel="add blog">
-        <BlogForm createBlog={addBlog} />
+        <BlogForm />
       </Togglable>
     )
   }
@@ -146,13 +94,7 @@ const App = () => {
   const blogsList = () => (
     <div>
       {blogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          handleLikeButton={() => addLikeTo(blog.id)}
-          handleDeleteButton={() => deleteBlog(blog.id)}
-          loggedUser={user}
-        />
+        <Blog key={blog.id} blog={blog} loggedUser={user} />
       ))}
     </div>
   )

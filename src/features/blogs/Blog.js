@@ -1,14 +1,11 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { addLikeToBlog, addLikeToBlogWithID } from './blogsSlice'
-import {
-  removeNotification,
-  sendErrorMessage,
-} from '../notification/notificationSlice'
+import { addLikeToBlog, removeBlog } from './blogsSlice'
+import { sendErrorMessage } from '../notification/notificationSlice'
 import { unwrapResult } from '@reduxjs/toolkit'
 
-const Blog = ({ blog, handleDeleteButton, loggedUser }) => {
+const Blog = ({ blog, loggedUser }) => {
   const [detailed, setDetailed] = useState(false)
 
   const dispatch = useDispatch()
@@ -16,11 +13,23 @@ const Blog = ({ blog, handleDeleteButton, loggedUser }) => {
   const showWhenVisible = { display: detailed ? '' : 'none' }
   const buttonLabel = detailed ? 'hide' : 'view'
 
+  const handleLikeButton = () => {
+    dispatch(addLikeToBlog(blog))
+      .then(unwrapResult)
+      .catch((error) => {
+        sendErrorMessage(dispatch, error.message)
+      })
+  }
+
+  const handleRemoveButton = () => {
+    dispatch(removeBlog(blog))
+  }
+
   const removeButton = () => {
     if (loggedUser && loggedUser.id === blog.user.id) {
       return (
         <li>
-          <button className="button-remove" onClick={handleDeleteButton}>
+          <button className="button-remove" onClick={handleRemoveButton}>
             remove
           </button>
         </li>
@@ -31,14 +40,6 @@ const Blog = ({ blog, handleDeleteButton, loggedUser }) => {
 
   const toggleDetails = () => {
     setDetailed(!detailed)
-  }
-
-  const handleLikeButton = () => {
-    dispatch(addLikeToBlog(blog))
-      .then(unwrapResult)
-      .catch((error) => {
-        sendErrorMessage(dispatch, error.message)
-      })
   }
 
   return (
@@ -68,8 +69,6 @@ const Blog = ({ blog, handleDeleteButton, loggedUser }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  handleLikeButton: PropTypes.func.isRequired,
-  handleDeleteButton: PropTypes.func.isRequired,
   loggedUser: PropTypes.object.isRequired,
 }
 
