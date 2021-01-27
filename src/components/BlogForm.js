@@ -7,7 +7,7 @@ import {
   sendInfoMessage,
 } from '../features/notification/notificationSlice'
 
-const BlogForm = () => {
+const BlogForm = ({ blogFormRef }) => {
   const [newBlogTitle, setNewBlogTitle] = useState('')
   const [newBlogUrl, setNewBlogUrl] = useState('')
   const [newBlogAuthor, setNewBlogAuthor] = useState('')
@@ -17,7 +17,7 @@ const BlogForm = () => {
   const addBlog = async (event) => {
     event.preventDefault()
     try {
-      const resultCreateNewBlog = dispatch(
+      const resultCreateNewBlog = await dispatch(
         createNewBlog({
           title: newBlogTitle,
           author: newBlogAuthor,
@@ -28,11 +28,13 @@ const BlogForm = () => {
       dispatch(
         sendInfoMessage(`A new blog '${result.title}' has been created !`)
       )
+    } catch (error) {
+      dispatch(sendErrorMessage(error.message))
+    } finally {
+      blogFormRef.current.toggleVisibility()
       setNewBlogTitle('')
       setNewBlogAuthor('')
       setNewBlogUrl('')
-    } catch (error) {
-      dispatch(sendErrorMessage(error.message))
     }
   }
 
