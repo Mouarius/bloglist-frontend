@@ -1,12 +1,15 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { addLikeToBlog, removeBlog } from './blogsSlice'
 import { sendErrorMessage } from '../notification/notificationSlice'
 import { unwrapResult } from '@reduxjs/toolkit'
+import { selectUser } from '../users/usersSlice'
 
-const Blog = ({ blog, loggedUser }) => {
+const Blog = ({ blog }) => {
   const [detailed, setDetailed] = useState(false)
+
+  const loggedUser = useSelector(selectUser)
 
   const dispatch = useDispatch()
 
@@ -17,7 +20,7 @@ const Blog = ({ blog, loggedUser }) => {
     dispatch(addLikeToBlog(blog))
       .then(unwrapResult)
       .catch((error) => {
-        sendErrorMessage(dispatch, error.message)
+        dispatch(sendErrorMessage(error.message))
       })
   }
 

@@ -1,16 +1,45 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  loginUser,
+  selectUserCredentials,
+  setUser,
+} from '../features/users/usersSlice'
+import loginService from '../services/login'
+import { sendErrorMessage } from '../features/notification/notificationSlice'
+import { unwrapResult } from '@reduxjs/toolkit'
 
-const LoginForm = ({
-  username,
-  password,
-  handleUsernameChange,
-  handlePasswordChange,
-  handleSubmit,
-}) => {
+const LoginForm = () => {
+  const dispatch = useDispatch()
+
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value)
+  }
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value)
+  }
+
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    const loginCredentials = { username, password }
+    console.log('loginCredentials :>> ', loginCredentials)
+    try {
+      const resultLoginUser = await dispatch(loginUser(loginCredentials))
+      unwrapResult(resultLoginUser)
+      setUsername('')
+      setPassword('')
+    } catch (e) {
+      dispatch(sendErrorMessage(e.message))
+    }
+  }
+
   return (
     <div id="login-form">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleLogin}>
         <div>
           Username:
           <input
@@ -36,10 +65,6 @@ const LoginForm = ({
 }
 
 LoginForm.propTypes = {
-  username: PropTypes.arrayOf(String),
-  password: PropTypes.arrayOf(String),
-  handleUsernameChange: PropTypes.func.isRequired,
-  handlePasswordChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired,
 }
 

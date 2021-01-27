@@ -1,0 +1,51 @@
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import loginService from '../../services/login'
+
+const initialState = {
+  username: '',
+  password: '',
+  name: '',
+  id: '',
+  token: '',
+}
+
+export const loginUser = createAsyncThunk(
+  'user/loginUserStatus',
+  async (credentials, thunkAPI) => {
+    const userToLogin = await loginService.login(credentials)
+    window.localStorage.setItem(
+      'loggedBloglistUser',
+      JSON.stringify(userToLogin)
+    )
+    return userToLogin
+  }
+)
+
+const usersSlice = createSlice({
+  name: 'user',
+  initialState,
+  reducers: {
+    setUser: (state, action) => {
+      return (state = action.payload)
+    },
+  },
+  extraReducers: {
+    [loginUser.fulfilled]: (state, action) => {
+      window.localStorage.setItem(
+        'loggedBloglistUser',
+        JSON.stringify(action.payload)
+      )
+      return (state = action.payload)
+    },
+  },
+})
+
+export const selectUserCredentials = (state) => {
+  return { username: state.username, password: state.password }
+}
+
+export const selectUser = (state) => state.user
+
+export const { setUser } = usersSlice.actions
+
+export default usersSlice.reducer

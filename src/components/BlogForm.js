@@ -2,7 +2,10 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createNewBlog } from '../features/blogs/blogsSlice'
 import { unwrapResult } from '@reduxjs/toolkit'
-import { sendErrorMessage } from '../features/notification/notificationSlice'
+import {
+  sendErrorMessage,
+  sendInfoMessage,
+} from '../features/notification/notificationSlice'
 
 const BlogForm = () => {
   const [newBlogTitle, setNewBlogTitle] = useState('')
@@ -21,8 +24,11 @@ const BlogForm = () => {
       })
     )
       .then(unwrapResult)
+      .then(() => {
+        dispatch(sendInfoMessage('A new blog has been creéted!'))
+      })
       .catch((error) => {
-        sendErrorMessage(dispatch, error.message)
+        dispatch(sendErrorMessage(error.message))
       })
     setNewBlogTitle('')
     setNewBlogAuthor('')

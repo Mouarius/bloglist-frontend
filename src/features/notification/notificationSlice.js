@@ -2,11 +2,11 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const duration = 5000
 
-export const sendErrorMessage = (dispatch, message) => {
+export const sendErrorMessage = (message) => (dispatch) => {
   dispatch(setErrorMessage(message))
   setTimeout(() => dispatch(removeNotification()), duration)
 }
-export const sendInfoMessage = (dispatch, message) => {
+export const sendInfoMessage = (message) => (dispatch) => {
   dispatch(setInfoMessage(message))
   setTimeout(() => dispatch(removeNotification()), duration)
 }

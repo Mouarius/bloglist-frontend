@@ -13,20 +13,17 @@ import {
 } from './features/blogs/blogsSlice'
 
 import blogService from './services/blogs'
-import loginService from './services/login'
 import './App.css'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
+import { selectUser, setUser } from './features/users/usersSlice'
 
 const App = () => {
   const dispatch = useDispatch()
 
   const blogs = useSelector(selectBlogs)
-
-  const [username, setUsername] = useState([])
-  const [password, setPassword] = useState([])
-  const [user, setUser] = useState(null)
+  const user = useSelector(selectUser)
 
   const blogFormRef = useRef()
 
@@ -42,32 +39,15 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
     if (loggedUserJSON) {
       const loggedUser = JSON.parse(loggedUserJSON)
-      setUser(loggedUser)
+      dispatch(setUser(loggedUser))
       blogService.setToken(loggedUser.token)
     }
   }, [])
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    const credentials = { username, password }
-    try {
-      const userToLogin = await loginService.login(credentials)
-      window.localStorage.setItem(
-        'loggedBloglistUser',
-        JSON.stringify(userToLogin)
-      )
-      setUser(userToLogin)
-      setUsername('')
-      setPassword('')
-    } catch (exception) {
-      sendErrorMessage(dispatch, exception.response.data.error)
-    }
-  }
-
   const logout = (event) => {
     event.preventDefault()
     window.localStorage.removeItem('loggedBloglistUser')
-    setUser(null)
+    dispatch(setUser(null))
   }
 
   const blogForm = () => {
@@ -81,13 +61,7 @@ const App = () => {
   const loginForm = () => (
     <div>
       <h2>log in to the app</h2>
-      <LoginForm
-        username={username}
-        password={password}
-        handleUsernameChange={({ target }) => setUsername(target.value)}
-        handlePasswordChange={({ target }) => setPassword(target.value)}
-        handleSubmit={handleLogin}
-      />
+      <LoginForm />
     </div>
   )
 
