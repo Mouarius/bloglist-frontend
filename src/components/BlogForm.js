@@ -14,25 +14,26 @@ const BlogForm = () => {
 
   const dispatch = useDispatch()
 
-  const addBlog = (event) => {
+  const addBlog = async (event) => {
     event.preventDefault()
-    dispatch(
-      createNewBlog({
-        title: newBlogTitle,
-        author: newBlogAuthor,
-        url: newBlogUrl,
-      })
-    )
-      .then(unwrapResult)
-      .then(() => {
-        dispatch(sendInfoMessage('A new blog has been creéted!'))
-      })
-      .catch((error) => {
-        dispatch(sendErrorMessage(error.message))
-      })
-    setNewBlogTitle('')
-    setNewBlogAuthor('')
-    setNewBlogUrl('')
+    try {
+      const resultCreateNewBlog = dispatch(
+        createNewBlog({
+          title: newBlogTitle,
+          author: newBlogAuthor,
+          url: newBlogUrl,
+        })
+      )
+      const result = unwrapResult(resultCreateNewBlog)
+      dispatch(
+        sendInfoMessage(`A new blog '${result.title}' has been created !`)
+      )
+      setNewBlogTitle('')
+      setNewBlogAuthor('')
+      setNewBlogUrl('')
+    } catch (error) {
+      dispatch(sendErrorMessage(error.message))
+    }
   }
 
   return (
