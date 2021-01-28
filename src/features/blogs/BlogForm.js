@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { createNewBlog } from '../features/blogs/blogsSlice'
+import { createNewBlog } from './blogsSlice'
 import { unwrapResult } from '@reduxjs/toolkit'
 import {
   sendErrorMessage,
   sendInfoMessage,
-} from '../features/notification/notificationSlice'
+} from '../notification/notificationSlice'
 
 const BlogForm = ({ blogFormRef }) => {
   const [newBlogTitle, setNewBlogTitle] = useState('')

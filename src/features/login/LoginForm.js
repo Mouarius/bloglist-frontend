@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { loginUser } from '../features/login/loginSlice'
-import { sendErrorMessage } from '../features/notification/notificationSlice'
+import { loginUser } from './loginSlice'
+import { sendErrorMessage } from '../notification/notificationSlice'
 import { unwrapResult } from '@reduxjs/toolkit'
 
 const LoginForm = () => {

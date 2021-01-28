@@ -15,9 +15,9 @@ import {
 
 import blogService from './services/blogs'
 import './App.css'
-import LoginForm from './components/LoginForm'
+import LoginForm from './features/login/LoginForm'
 import Togglable from './components/Togglable'
-import BlogForm from './components/BlogForm'
+import BlogForm from './features/blogs/BlogForm'
 import { selectUser, setUser } from './features/login/loginSlice'
 import User from './features/users/User'
 import { initializeUsers } from './features/users/usersSlice'
