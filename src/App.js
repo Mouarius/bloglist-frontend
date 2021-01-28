@@ -1,31 +1,42 @@
 import React, { useEffect, useRef } from 'react'
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom/'
-import Users from './features/users/Users'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+} from 'react-router-dom/'
 
 import { useSelector, useDispatch } from 'react-redux'
 
+//STYLESHEET
+import './App.css'
+
+//Notification
 import Notification from './features/notification/Notification'
 
-import Blog from './features/blogs/Blog'
-import {
-  selectBlogs,
-  initializeBlogs,
-  sortBlogs,
-} from './features/blogs/blogsSlice'
-
-import blogService from './services/blogs'
-import './App.css'
-import LoginForm from './features/login/LoginForm'
+//Toggleable
 import Togglable from './components/Togglable'
+
+//Blogs
+import blogService from './services/blogs'
+import { initializeBlogs, sortBlogs } from './features/blogs/blogsSlice'
 import BlogForm from './features/blogs/BlogForm'
+
+//Login
 import { selectUser, setUser } from './features/login/loginSlice'
-import User from './features/users/User'
+import LoginForm from './features/login/LoginForm'
+
+//Users
 import { initializeUsers } from './features/users/usersSlice'
+import UserList from './features/users/UserList'
+import User from './features/users/User'
+import BlogList from './features/blogs/BlogList'
+import LoginInfo from './features/login/LoginInfo'
 
 const App = () => {
   const dispatch = useDispatch()
 
-  const blogs = useSelector(selectBlogs)
   const user = useSelector(selectUser)
 
   const blogFormRef = useRef()
@@ -51,40 +62,6 @@ const App = () => {
     }
   }, [dispatch])
 
-  const logout = (event) => {
-    event.preventDefault()
-    window.localStorage.removeItem('loggedBloglistUser')
-    dispatch(setUser(null))
-  }
-
-  const blogForm = () => {
-    return (
-      <Togglable ref={blogFormRef} buttonLabel="add blog">
-        <BlogForm blogFormRef={blogFormRef} />
-      </Togglable>
-    )
-  }
-
-  const loginForm = () => (
-    <div>
-      <h2>log in to the app</h2>
-      <LoginForm />
-    </div>
-  )
-
-  const blogsList = () => (
-    <div>
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} loggedUser={user} />
-      ))}
-    </div>
-  )
-  const loginInfo = () => (
-    <p>
-      {user.name} is logged in. <button onClick={logout}>log out</button>
-    </p>
-  )
-
   const navLinkClass = 'nav-link'
 
   return (
@@ -99,21 +76,26 @@ const App = () => {
           BLOGS
         </Link>
       </nav>
+
       <Notification />
 
-      {loginInfo()}
+      {user ? <LoginInfo /> : <Redirect to="/login" />}
+
       <Switch>
-        <Route path="/login">{loginForm()}</Route>
+        <Route path="/login">
+          <LoginForm />
+        </Route>
         <Route path="/users/:id">
           <User />
         </Route>
         <Route path="/users">
-          <Users />
+          <UserList />
         </Route>
-
         <Route path="/">
-          {blogForm()}
-          {blogsList()}
+          <Togglable ref={blogFormRef} buttonLabel="add blog">
+            <BlogForm blogFormRef={blogFormRef} />
+          </Togglable>
+          <BlogList />
         </Route>
       </Switch>
     </Router>

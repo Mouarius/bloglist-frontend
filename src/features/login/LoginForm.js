@@ -3,9 +3,11 @@ import { useDispatch } from 'react-redux'
 import { loginUser } from './loginSlice'
 import { sendErrorMessage } from '../notification/notificationSlice'
 import { unwrapResult } from '@reduxjs/toolkit'
+import { useHistory } from 'react-router-dom'
 
 const LoginForm = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -26,6 +28,7 @@ const LoginForm = () => {
       unwrapResult(resultLoginUser)
       setUsername('')
       setPassword('')
+      history.push('/')
     } catch (e) {
       dispatch(sendErrorMessage(e.message))
     }
@@ -33,6 +36,8 @@ const LoginForm = () => {
 
   return (
     <div id="login-form">
+      <h2>log in to the app</h2>
+
       <form onSubmit={handleLogin}>
         <div>
           Username:

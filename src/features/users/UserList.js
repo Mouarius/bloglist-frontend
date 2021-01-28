@@ -4,7 +4,7 @@ import { selectAllUsers } from './usersSlice'
 import './Users.css'
 import { Link } from 'react-router-dom'
 
-const Blogs = () => {
+const UserList = () => {
   const users = useSelector(selectAllUsers)
 
   return (
@@ -33,4 +33,4 @@ const Blogs = () => {
   )
 }
 
-export default Blogs
+export default UserList
