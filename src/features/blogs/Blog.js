@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
-import { addLikeToBlog, removeBlog, selectBlogs } from './blogsSlice'
+import {
+  addCommentToBlog,
+  addLikeToBlog,
+  removeBlog,
+  selectBlogs,
+} from './blogsSlice'
 import {
   sendErrorMessage,
   sendInfoMessage,
@@ -15,6 +19,8 @@ const Blog = () => {
   const blogs = useSelector(selectBlogs)
   const history = useHistory()
   const id = useParams().id
+
+  const [comment, setComment] = useState('')
 
   const blog = blogs.find((blog) => blog.id === id)
 
@@ -42,6 +48,19 @@ const Blog = () => {
       } catch (error) {
         dispatch(sendErrorMessage(error.message))
       }
+    }
+  }
+
+  const handleCommentSubmit = async (event) => {
+    event.preventDefault()
+    try {
+      const objectToSend = { blog: blog, comment: comment }
+      const addComment = await dispatch(addCommentToBlog(objectToSend))
+      unwrapResult(addComment)
+    } catch (e) {
+      console.log(e)
+    } finally {
+      setComment('')
     }
   }
 
@@ -92,17 +111,21 @@ const Blog = () => {
               ))}
             </ul>
           </li>
-
+          <li>
+            <h4>Comment blog</h4>
+            <form onSubmit={handleCommentSubmit}>
+              <input
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              />
+              <button type="submit">send</button>
+            </form>
+          </li>
           {removeButton()}
         </ul>
       </div>
     </div>
   )
-}
-
-Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
-  loggedUser: PropTypes.object.isRequired,
 }
 
 export default Blog

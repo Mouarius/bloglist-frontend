@@ -27,10 +27,20 @@ export const createNewBlog = createAsyncThunk(
 export const addLikeToBlog = createAsyncThunk(
   'blogs/addLikeToBlogStatus',
   async (blog, thunkAPI) => {
+    console.log('blog :>> ', blog)
     const blogToUpdate = { ...blog }
     blogToUpdate.likes += 1
     const updatedBlog = await blogService.update(blogToUpdate)
     return updatedBlog
+  }
+)
+
+export const addCommentToBlog = createAsyncThunk(
+  'blogs/addCommentToBlogStatus',
+  async (recievedObject) => {
+    const { blog, comment } = recievedObject
+    const commentedBlog = await blogService.comment(blog, { content: comment })
+    return commentedBlog
   }
 )
 
@@ -73,6 +83,12 @@ const blogsSlice = createSlice({
     [removeBlog.fulfilled]: (state, action) => {
       return sortBlogsByLikes(
         state.filter((blog) => blog.id !== action.meta.arg.id)
+      )
+    },
+    [addCommentToBlog.fulfilled]: (state, action) => {
+      console.log('action.payload :>> ', action.payload)
+      return state.map((blog) =>
+        blog.id === action.payload.id ? action.payload : blog
       )
     },
   },
