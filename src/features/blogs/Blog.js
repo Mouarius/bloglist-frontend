@@ -81,6 +81,18 @@ const Blog = () => {
               like
             </button>
           </li>
+          <li>
+            <ul>
+              <h4>Comments :</h4>
+              {blog.comments.map((comment) => (
+                <li style={{ paddingLeft: '0.5em' }} key={comment.id}>
+                  {' '}
+                  {comment.content}
+                </li>
+              ))}
+            </ul>
+          </li>
+
           {removeButton()}
         </ul>
       </div>

@@ -26,6 +26,14 @@ const update = async (blogToUpdate) => {
   return request.data
 }
 
+const comment = async (blogToComment, comment) => {
+  const request = await axios.post(
+    baseUrl + '/' + blogToComment.id + '/comments',
+    comment
+  )
+  return request.data
+}
+
 const remove = async (id) => {
   const config = {
     headers: { Authorization: token },
