@@ -26,8 +26,16 @@ body {
   overflow: hidden;
   position: relative;
 }
+.blog a {
+  text-decoration: none;
+}
 .blog-title {
   display: inline;
+  color: black;
+  text-decoration: underline;
+}
+.blog-author {
+  color: black;
 }
 .blog .button-visibility {
   right: 2pt;

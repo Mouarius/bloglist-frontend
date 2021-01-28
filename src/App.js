@@ -33,6 +33,7 @@ import UserList from './features/users/UserList'
 import User from './features/users/User'
 import BlogList from './features/blogs/BlogList'
 import LoginInfo from './features/login/LoginInfo'
+import Blog from './features/blogs/Blog'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -90,6 +91,9 @@ const App = () => {
         </Route>
         <Route path="/users">
           <UserList />
+        </Route>
+        <Route path="/blogs/:id">
+          <Blog />
         </Route>
         <Route path="/">
           <Togglable ref={blogFormRef} buttonLabel="add blog">

@@ -1,23 +1,24 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
-import { addLikeToBlog, removeBlog } from './blogsSlice'
+import { addLikeToBlog, removeBlog, selectBlogs } from './blogsSlice'
 import {
   sendErrorMessage,
   sendInfoMessage,
 } from '../notification/notificationSlice'
 import { unwrapResult } from '@reduxjs/toolkit'
 import { selectUser } from '../login/loginSlice'
+import { useHistory, useParams } from 'react-router-dom'
 
-const Blog = ({ blog }) => {
-  const [detailed, setDetailed] = useState(false)
+const Blog = () => {
+  const dispatch = useDispatch()
+  const blogs = useSelector(selectBlogs)
+  const history = useHistory()
+  const id = useParams().id
+
+  const blog = blogs.find((blog) => blog.id === id)
 
   const loggedUser = useSelector(selectUser)
-
-  const dispatch = useDispatch()
-
-  const showWhenVisible = { display: detailed ? '' : 'none' }
-  const buttonLabel = detailed ? 'hide' : 'view'
 
   const handleLikeButton = () => {
     dispatch(addLikeToBlog(blog))
@@ -37,6 +38,7 @@ const Blog = ({ blog }) => {
         unwrapResult(resultRemoveBlog)
         const { meta } = resultRemoveBlog
         dispatch(sendInfoMessage(`The blog ${meta.title} has been removed`))
+        history.push('/')
       } catch (error) {
         dispatch(sendErrorMessage(error.message))
       }
@@ -56,18 +58,19 @@ const Blog = ({ blog }) => {
     return null
   }
 
-  const toggleDetails = () => {
-    setDetailed(!detailed)
+  if (!blog) {
+    return (
+      <div>
+        <em>It exists no blogs at this adress (404 not found)</em>
+      </div>
+    )
   }
 
   return (
     <div className="blog">
       <h3 className="blog-title">{blog.title}</h3> -{' '}
       <span className="blog-author">{blog.author}</span>
-      <button className="button-visibility" onClick={toggleDetails}>
-        {buttonLabel}
-      </button>
-      <div className="blog-details" style={showWhenVisible}>
+      <div className="blog-details">
         <ul>
           <li className="blog-url">
             <a href={blog.url}>{blog.url}</a>
