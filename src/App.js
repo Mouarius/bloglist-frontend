@@ -80,7 +80,7 @@ const App = () => {
 
       <Notification />
 
-      {user ? <LoginInfo /> : <Redirect to="/login" />}
+      {user.username ? <LoginInfo /> : <Redirect to="/login" />}
 
       <Switch>
         <Route path="/login">
