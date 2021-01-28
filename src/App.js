@@ -1,14 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom/'
 import Users from './features/users/Users'
 
 import { useSelector, useDispatch } from 'react-redux'
 
 import Notification from './features/notification/Notification'
-import {
-  sendErrorMessage,
-  sendInfoMessage,
-} from './features/notification/notificationSlice'
 
 import Blog from './features/blogs/Blog'
 import {
@@ -23,6 +19,8 @@ import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import { selectUser, setUser } from './features/login/loginSlice'
+import User from './features/users/User'
+import { initializeUsers } from './features/users/usersSlice'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -37,8 +35,12 @@ const App = () => {
       await dispatch(initializeBlogs())
       dispatch(sortBlogs())
     }
+    const fetchUsers = async () => {
+      await dispatch(initializeUsers())
+    }
     fetchBlogs()
-  }, [])
+    fetchUsers()
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
@@ -47,7 +49,7 @@ const App = () => {
       dispatch(setUser(loggedUser))
       blogService.setToken(loggedUser.token)
     }
-  }, [])
+  }, [dispatch])
 
   const logout = (event) => {
     event.preventDefault()
@@ -102,9 +104,13 @@ const App = () => {
       {loginInfo()}
       <Switch>
         <Route path="/login">{loginForm()}</Route>
+        <Route path="/users/:id">
+          <User />
+        </Route>
         <Route path="/users">
           <Users />
         </Route>
+
         <Route path="/">
           {blogForm()}
           {blogsList()}

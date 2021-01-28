@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { loginUser } from '../features/login/loginSlice'
 import { sendErrorMessage } from '../features/notification/notificationSlice'
@@ -57,10 +56,6 @@ const LoginForm = () => {
       </form>
     </div>
   )
-}
-
-LoginForm.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
 }
 
 export default LoginForm

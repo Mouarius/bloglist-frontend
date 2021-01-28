@@ -1,15 +1,12 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchAllUsers, selectAllUsers } from './usersSlice'
+import React from 'react'
+import { useSelector } from 'react-redux'
+import { selectAllUsers } from './usersSlice'
 import './Users.css'
+import { Link } from 'react-router-dom'
 
 const Blogs = () => {
   const users = useSelector(selectAllUsers)
-  const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(fetchAllUsers())
-    console.log(users)
-  }, [])
+
   return (
     <div>
       <h2>Users</h2>
@@ -23,7 +20,9 @@ const Blogs = () => {
         <tbody>
           {users.map((user) => (
             <tr key={user.id}>
-              <td>{user.name}</td>
+              <td>
+                <Link to={`/users/${user.id}`}>{user.name}</Link>
+              </td>
               <td>{user.blogs.length}</td>
             </tr>
           ))}
