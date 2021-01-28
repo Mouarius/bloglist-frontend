@@ -10,7 +10,7 @@ export const sortBlogsByLikes = (blogs) => {
 
 export const initializeBlogs = createAsyncThunk(
   'blogs/fetchingBlogStatus',
-  async (thunkAPI) => {
+  async () => {
     const allBlogs = await blogService.getAll()
     return allBlogs
   }
@@ -18,7 +18,7 @@ export const initializeBlogs = createAsyncThunk(
 
 export const createNewBlog = createAsyncThunk(
   'blogs/createNewBlogStatus',
-  async (blogToCreate, thunkAPI) => {
+  async (blogToCreate) => {
     const newBlog = await blogService.create(blogToCreate)
     return newBlog
   }
@@ -26,7 +26,7 @@ export const createNewBlog = createAsyncThunk(
 
 export const addLikeToBlog = createAsyncThunk(
   'blogs/addLikeToBlogStatus',
-  async (blog, thunkAPI) => {
+  async (blog) => {
     console.log('blog :>> ', blog)
     const blogToUpdate = { ...blog }
     blogToUpdate.likes += 1
@@ -46,7 +46,7 @@ export const addCommentToBlog = createAsyncThunk(
 
 export const removeBlog = createAsyncThunk(
   'blogs/removeBlogStatus',
-  async (blog, thunkAPI) => {
+  async (blog) => {
     const updatedBlogs = await blogService.remove(blog.id)
     return updatedBlogs
   }
@@ -62,7 +62,7 @@ const blogsSlice = createSlice({
     addNewBlog: (state, action) => {
       return state.concat(action.payload)
     },
-    sortBlogs: (state, action) => {
+    sortBlogs: (state) => {
       return sortBlogsByLikes(state)
     },
   },

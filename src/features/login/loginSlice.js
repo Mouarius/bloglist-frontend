@@ -11,7 +11,7 @@ const initialState = {
 
 export const loginUser = createAsyncThunk(
   'login/loginUserStatus',
-  async (credentials, thunkAPI) => {
+  async (credentials) => {
     const userToLogin = await loginService.login(credentials)
     window.localStorage.setItem(
       'loggedBloglistUser',

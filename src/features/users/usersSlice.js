@@ -3,7 +3,7 @@ import usersService from '../../services/users'
 
 export const initializeUsers = createAsyncThunk(
   'users/initializeUsers',
-  async (thunkAPI) => {
+  async () => {
     const users = await usersService.getAll()
     return users
   }

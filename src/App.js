@@ -10,7 +10,7 @@ import {
 import { useSelector, useDispatch } from 'react-redux'
 
 //STYLESHEET
-import './App.css'
+// import './App.css'
 
 //Notification
 import Notification from './features/notification/Notification'
@@ -67,41 +67,42 @@ const App = () => {
 
   return (
     <Router>
-      <h1>blogs</h1>
+      <div className="container px-4 mx-auto bg-">
+        <nav>
+          <h1 className="">blogs</h1>
+          <Link className={navLinkClass} to="/users">
+            USERS
+          </Link>
+          <Link className={navLinkClass} to="/">
+            BLOGS
+          </Link>
+        </nav>
 
-      <nav>
-        <Link className={navLinkClass} to="/users">
-          USERS
-        </Link>
-        <Link className={navLinkClass} to="/">
-          BLOGS
-        </Link>
-      </nav>
+        <Notification />
 
-      <Notification />
+        {user.username ? <LoginInfo /> : <Redirect to="/login" />}
 
-      {user.username ? <LoginInfo /> : <Redirect to="/login" />}
-
-      <Switch>
-        <Route path="/login">
-          <LoginForm />
-        </Route>
-        <Route path="/users/:id">
-          <User />
-        </Route>
-        <Route path="/users">
-          <UserList />
-        </Route>
-        <Route path="/blogs/:id">
-          <Blog />
-        </Route>
-        <Route path="/">
-          <Togglable ref={blogFormRef} buttonLabel="add blog">
-            <BlogForm blogFormRef={blogFormRef} />
-          </Togglable>
-          <BlogList />
-        </Route>
-      </Switch>
+        <Switch>
+          <Route path="/login">
+            <LoginForm />
+          </Route>
+          <Route path="/users/:id">
+            <User />
+          </Route>
+          <Route path="/users">
+            <UserList />
+          </Route>
+          <Route path="/blogs/:id">
+            <Blog />
+          </Route>
+          <Route path="/">
+            <Togglable ref={blogFormRef} buttonLabel="add blog">
+              <BlogForm blogFormRef={blogFormRef} />
+            </Togglable>
+            <BlogList />
+          </Route>
+        </Switch>
+      </div>
     </Router>
   )
 }
