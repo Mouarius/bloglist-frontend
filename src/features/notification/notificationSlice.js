@@ -1,19 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const duration = 5000
+let notificationTimeout
 
 export const sendErrorMessage = (message) => (dispatch) => {
+  clearTimeout(notificationTimeout)
   dispatch(setErrorMessage(message))
-  setTimeout(() => dispatch(removeNotification()), duration)
+  notificationTimeout = setTimeout(
+    () => dispatch(removeNotification()),
+    duration
+  )
 }
 export const sendInfoMessage = (message) => (dispatch) => {
-  dispatch(setInfoMessage(message))
+  clearTimeout(notificationTimeout)
+  notificationTimeout = dispatch(setInfoMessage(message))
   setTimeout(() => dispatch(removeNotification()), duration)
 }
 
 const notificationSlice = createSlice({
   name: 'notification',
   initialState: {
+    timeoutID: '',
     type: '',
     content: '',
   },

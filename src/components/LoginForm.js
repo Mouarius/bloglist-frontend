@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { loginUser } from '../features/users/usersSlice'
+import { loginUser } from '../features/login/loginSlice'
 import { sendErrorMessage } from '../features/notification/notificationSlice'
 import { unwrapResult } from '@reduxjs/toolkit'
 

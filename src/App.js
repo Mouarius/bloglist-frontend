@@ -1,9 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom/'
+import Users from './features/users/Users'
 
 import { useSelector, useDispatch } from 'react-redux'
 
 import Notification from './features/notification/Notification'
-import { sendErrorMessage } from './features/notification/notificationSlice'
+import {
+  sendErrorMessage,
+  sendInfoMessage,
+} from './features/notification/notificationSlice'
 
 import Blog from './features/blogs/Blog'
 import {
@@ -17,7 +22,7 @@ import './App.css'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
-import { selectUser, setUser } from './features/users/usersSlice'
+import { selectUser, setUser } from './features/login/loginSlice'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -78,20 +83,34 @@ const App = () => {
     </p>
   )
 
+  const navLinkClass = 'nav-link'
+
   return (
-    <div>
+    <Router>
+      <h1>blogs</h1>
+
+      <nav>
+        <Link className={navLinkClass} to="/users">
+          USERS
+        </Link>
+        <Link className={navLinkClass} to="/">
+          BLOGS
+        </Link>
+      </nav>
       <Notification />
-      {user === null ? (
-        loginForm()
-      ) : (
-        <div>
-          <h2>blogs</h2>
-          {loginInfo()}
+
+      {loginInfo()}
+      <Switch>
+        <Route path="/login">{loginForm()}</Route>
+        <Route path="/users">
+          <Users />
+        </Route>
+        <Route path="/">
           {blogForm()}
           {blogsList()}
-        </div>
-      )}
-    </div>
+        </Route>
+      </Switch>
+    </Router>
   )
 }
 

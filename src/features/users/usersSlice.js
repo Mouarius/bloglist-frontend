@@ -1,51 +1,27 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import loginService from '../../services/login'
+import usersService from '../../services/users'
 
-const initialState = {
-  username: '',
-  password: '',
-  name: '',
-  id: '',
-  token: '',
-}
-
-export const loginUser = createAsyncThunk(
-  'user/loginUserStatus',
-  async (credentials, thunkAPI) => {
-    const userToLogin = await loginService.login(credentials)
-    window.localStorage.setItem(
-      'loggedBloglistUser',
-      JSON.stringify(userToLogin)
-    )
-    return userToLogin
+export const fetchAllUsers = createAsyncThunk(
+  'users/fetchAllUsers',
+  async (thunkAPI) => {
+    const users = await usersService.getAll()
+    return users
   }
 )
 
+const initialState = []
+
 const usersSlice = createSlice({
-  name: 'user',
+  name: 'users',
   initialState,
-  reducers: {
-    setUser: (state, action) => {
-      return (state = action.payload)
-    },
-  },
+  reducers: {},
   extraReducers: {
-    [loginUser.fulfilled]: (state, action) => {
-      window.localStorage.setItem(
-        'loggedBloglistUser',
-        JSON.stringify(action.payload)
-      )
+    [fetchAllUsers.fulfilled]: (state, action) => {
       return (state = action.payload)
     },
   },
 })
 
-export const selectUserCredentials = (state) => {
-  return { username: state.username, password: state.password }
-}
-
-export const selectUser = (state) => state.user
-
-export const { setUser } = usersSlice.actions
+export const selectAllUsers = (state) => state.users
 
 export default usersSlice.reducer

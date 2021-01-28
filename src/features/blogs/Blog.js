@@ -7,7 +7,7 @@ import {
   sendInfoMessage,
 } from '../notification/notificationSlice'
 import { unwrapResult } from '@reduxjs/toolkit'
-import { selectUser } from '../users/usersSlice'
+import { selectUser } from '../login/loginSlice'
 
 const Blog = ({ blog }) => {
   const [detailed, setDetailed] = useState(false)
