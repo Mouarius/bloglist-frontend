@@ -12,7 +12,7 @@ const BlogList = () => {
     return null
   }
   return (
-    <div id="bloglist" className="container flex flex-col px-8 mx-auto">
+    <div id="bloglist" className="container flex flex-col mx-auto">
       {blogs.map((blog) => (
         <div key={blog.id} className="my-2 bordered blog card">
           <Link to={`/blogs/${blog.id}`} className="p-4 card-body">

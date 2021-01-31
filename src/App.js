@@ -87,7 +87,7 @@ const App = () => {
             </div>
           </div>
         </nav>
-        <div className="container px-16 mx-auto">
+        <div className="container max-w-lg pt-12 mx-auto">
           {user.username ? <LoginInfo /> : <Redirect to="/login" />}
 
           <Notification />
