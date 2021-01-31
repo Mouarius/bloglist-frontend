@@ -1,8 +1,8 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { selectUser } from '../login/loginSlice'
-import { selectBlogs } from './blogsSlice'
+import React from "react"
+import { useSelector } from "react-redux"
+import { Link } from "react-router-dom"
+import { selectUser } from "../login/loginSlice"
+import { selectBlogs } from "./blogsSlice"
 
 const BlogList = () => {
   const blogs = useSelector(selectBlogs)
@@ -12,12 +12,14 @@ const BlogList = () => {
     return null
   }
   return (
-    <div id="bloglist">
+    <div id="bloglist" className="container flex flex-col px-8 mx-auto">
       {blogs.map((blog) => (
-        <div key={blog.id} className="blog">
-          <Link to={`/blogs/${blog.id}`}>
-            <h3 className="blog-title">{blog.title}</h3> -{' '}
-            <span className="blog-author">{blog.author}</span>
+        <div key={blog.id} className="my-2 bordered blog card">
+          <Link to={`/blogs/${blog.id}`} className="p-4 card-body">
+            <h2 class="mb-0 text-2xl">
+              {blog.title} -{" "}
+              <div class="badge badge-outline">{blog.author}</div>
+            </h2>
           </Link>
         </div>
       ))}

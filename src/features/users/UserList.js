@@ -1,7 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { selectAllUsers } from './usersSlice'
-import './Users.css'
 import { Link } from 'react-router-dom'
 
 const UserList = () => {

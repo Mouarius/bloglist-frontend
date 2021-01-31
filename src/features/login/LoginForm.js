@@ -35,30 +35,37 @@ const LoginForm = () => {
   }
 
   return (
-    <div id="login-form">
-      <h2>log in to the app</h2>
+    <div id="login-form" className="flex max-w-md mx-auto mt-10 shadow card">
+      <div className="card-body">
+        <h2 className="text-3xl card-title">Log in to the app</h2>
 
-      <form onSubmit={handleLogin}>
-        <div>
-          Username:
+        <form className="form-control" onSubmit={handleLogin}>
+          <label className="label">
+            <span className="label-text">Username</span>
+          </label>
           <input
             type="text"
             value={username}
             name="Username"
             onChange={handleUsernameChange}
+            className="input input-bordered"
           />
-        </div>
-        <div>
-          Password:
+
+          <label className="label">
+            <span className="label-text">Password</span>
+          </label>
           <input
             type="password"
             value={password}
             name="Password"
             onChange={handlePasswordChange}
+            className=" input input-bordered"
           />
-        </div>
-        <button type="submit">login</button>
-      </form>
+          <button className="px-8 mt-4 btn btn-primary" type="submit">
+            login
+          </button>
+        </form>
+      </div>
     </div>
   )
 }

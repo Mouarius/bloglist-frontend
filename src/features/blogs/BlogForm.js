@@ -1,16 +1,16 @@
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { createNewBlog } from './blogsSlice'
-import { unwrapResult } from '@reduxjs/toolkit'
+import React, { useState } from "react"
+import { useDispatch } from "react-redux"
+import { createNewBlog } from "./blogsSlice"
+import { unwrapResult } from "@reduxjs/toolkit"
 import {
   sendErrorMessage,
   sendInfoMessage,
-} from '../notification/notificationSlice'
+} from "../notification/notificationSlice"
 
 const BlogForm = ({ blogFormRef }) => {
-  const [newBlogTitle, setNewBlogTitle] = useState('')
-  const [newBlogUrl, setNewBlogUrl] = useState('')
-  const [newBlogAuthor, setNewBlogAuthor] = useState('')
+  const [newBlogTitle, setNewBlogTitle] = useState("")
+  const [newBlogUrl, setNewBlogUrl] = useState("")
+  const [newBlogAuthor, setNewBlogAuthor] = useState("")
 
   const dispatch = useDispatch()
 
@@ -32,44 +32,55 @@ const BlogForm = ({ blogFormRef }) => {
       dispatch(sendErrorMessage(error.message))
     } finally {
       blogFormRef.current.toggleVisibility()
-      setNewBlogTitle('')
-      setNewBlogAuthor('')
-      setNewBlogUrl('')
+      setNewBlogTitle("")
+      setNewBlogAuthor("")
+      setNewBlogUrl("")
     }
   }
 
   return (
     <div id="blog-form">
-      <h3>create new</h3>
-      <form onSubmit={addBlog}>
-        <div>
-          Title :
+      <h3 className="card-title">Create a new Blog</h3>
+      <form onSubmit={addBlog} className="flex flex-col">
+        <div className="form-control">
+          <label className="label">
+            <h3 className="label-text">Title</h3>
+          </label>
           <input
             type="text"
             value={newBlogTitle}
             name="blogTitle"
             onChange={({ target }) => setNewBlogTitle(target.value)}
+            className="input input-bordered"
           />
         </div>
-        <div>
-          Author :
+        <div className="form-control">
+          <label className="label">
+            <h3 className="label-text">Author</h3>
+          </label>
           <input
             type="text"
             value={newBlogAuthor}
             name="blogAuthor"
             onChange={({ target }) => setNewBlogAuthor(target.value)}
+            className="input input-bordered"
           />
         </div>
-        <div>
-          URL :
+        <div className="form-control">
+          <label className="label">
+            <h3 className="label-text">Author</h3>
+          </label>
           <input
             type="text"
             value={newBlogUrl}
             name="blogUrl"
             onChange={({ target }) => setNewBlogUrl(target.value)}
+            className="input input-bordered"
           />
         </div>
-        <button type="submit">send</button>
+        <button type="submit" className="w-auto mt-4 btn btn-primary">
+          send
+        </button>
       </form>
     </div>
   )

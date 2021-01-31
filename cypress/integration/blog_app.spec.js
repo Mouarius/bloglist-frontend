@@ -35,7 +35,7 @@ describe('Blog App', () => {
         .should('have.css', 'background-color', 'rgb(255, 0, 0)')
     })
   })
-  describe('When logged in ', () => {
+  describe('When logged in', () => {
     beforeEach(function () {
       cy.login('mouarius', 'suirauom')
       const testBlog = {

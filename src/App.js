@@ -1,39 +1,39 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from "react"
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Link,
   Redirect,
-} from 'react-router-dom/'
+} from "react-router-dom/"
 
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from "react-redux"
 
 //STYLESHEET
 // import './App.css'
 
 //Notification
-import Notification from './features/notification/Notification'
+import Notification from "./features/notification/Notification"
 
 //Toggleable
-import Togglable from './components/Togglable'
+import Togglable from "./components/Togglable"
 
 //Blogs
-import blogService from './services/blogs'
-import { initializeBlogs, sortBlogs } from './features/blogs/blogsSlice'
-import BlogForm from './features/blogs/BlogForm'
+import blogService from "./services/blogs"
+import { initializeBlogs, sortBlogs } from "./features/blogs/blogsSlice"
+import BlogForm from "./features/blogs/BlogForm"
 
 //Login
-import { selectUser, setUser } from './features/login/loginSlice'
-import LoginForm from './features/login/LoginForm'
+import { selectUser, setUser } from "./features/login/loginSlice"
+import LoginForm from "./features/login/LoginForm"
 
 //Users
-import { initializeUsers } from './features/users/usersSlice'
-import UserList from './features/users/UserList'
-import User from './features/users/User'
-import BlogList from './features/blogs/BlogList'
-import LoginInfo from './features/login/LoginInfo'
-import Blog from './features/blogs/Blog'
+import { initializeUsers } from "./features/users/usersSlice"
+import UserList from "./features/users/UserList"
+import User from "./features/users/User"
+import BlogList from "./features/blogs/BlogList"
+import LoginInfo from "./features/login/LoginInfo"
+import Blog from "./features/blogs/Blog"
 
 const App = () => {
   const dispatch = useDispatch()
@@ -55,7 +55,7 @@ const App = () => {
   }, [dispatch])
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
+    const loggedUserJSON = window.localStorage.getItem("loggedBloglistUser")
     if (loggedUserJSON) {
       const loggedUser = JSON.parse(loggedUserJSON)
       dispatch(setUser(loggedUser))
@@ -63,45 +63,56 @@ const App = () => {
     }
   }, [dispatch])
 
-  const navLinkClass = 'nav-link'
-
   return (
     <Router>
-      <div className="container px-4 mx-auto bg-">
-        <nav>
-          <h1 className="">blogs</h1>
-          <Link className={navLinkClass} to="/users">
-            USERS
-          </Link>
-          <Link className={navLinkClass} to="/">
-            BLOGS
-          </Link>
+      <div className="px-4 py-4 mx-auto min-w-lg">
+        <nav className="mb-2 shadow-lg rounded-box bg-primary navbar text-content-100">
+          <div className="flex-none px-2 mx-2 ">
+            <h1 className="text-lg font-bold">Bloglist App</h1>
+          </div>
+          <div className="flex-1 text-md">
+            <div classname="items-stretch hidden lg:flex">
+              <Link
+                className="btn btn-ghost btn-sm rounded-btn hover:text-content-100"
+                to="/"
+              >
+                blogs
+              </Link>
+              <Link
+                className="btn btn-ghost btn-sm rounded-btn hover:text-content-100"
+                to="/users"
+              >
+                users
+              </Link>
+            </div>
+          </div>
         </nav>
+        <div className="container px-16 mx-auto">
+          {user.username ? <LoginInfo /> : <Redirect to="/login" />}
 
-        <Notification />
+          <Notification />
 
-        {user.username ? <LoginInfo /> : <Redirect to="/login" />}
-
-        <Switch>
-          <Route path="/login">
-            <LoginForm />
-          </Route>
-          <Route path="/users/:id">
-            <User />
-          </Route>
-          <Route path="/users">
-            <UserList />
-          </Route>
-          <Route path="/blogs/:id">
-            <Blog />
-          </Route>
-          <Route path="/">
-            <Togglable ref={blogFormRef} buttonLabel="add blog">
-              <BlogForm blogFormRef={blogFormRef} />
-            </Togglable>
-            <BlogList />
-          </Route>
-        </Switch>
+          <Switch>
+            <Route path="/login">
+              {!user.username ? <LoginForm /> : <Redirect to="/" />}
+            </Route>
+            <Route path="/users/:id">
+              <User />
+            </Route>
+            <Route path="/users">
+              <UserList />
+            </Route>
+            <Route path="/blogs/:id">
+              <Blog />
+            </Route>
+            <Route path="/">
+              <Togglable ref={blogFormRef} buttonLabel="add blog">
+                <BlogForm blogFormRef={blogFormRef} />
+              </Togglable>
+              <BlogList />
+            </Route>
+          </Switch>
+        </div>
       </div>
     </Router>
   )
