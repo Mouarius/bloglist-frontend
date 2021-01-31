@@ -68,7 +68,10 @@ const Blog = () => {
     if (loggedUser && loggedUser.id === blog.user.id) {
       return (
         <li>
-          <button className="button-remove" onClick={handleRemoveButton}>
+          <button
+            className="button-remove btn btn-sm btn-secondary"
+            onClick={handleRemoveButton}
+          >
             remove
           </button>
         </li>

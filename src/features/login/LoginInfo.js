@@ -1,14 +1,17 @@
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { useHistory } from "react-router-dom"
 import { selectUser, setUser } from "./loginSlice"
 
 const LoginInfo = () => {
   const user = useSelector(selectUser)
   const dispatch = useDispatch()
+  const history = useHistory()
   const logout = (event) => {
     event.preventDefault()
     window.localStorage.removeItem("loggedBloglistUser")
     dispatch(setUser(null))
+    history.push("/login")
   }
   if (!user) {
     return null

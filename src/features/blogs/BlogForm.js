@@ -68,7 +68,7 @@ const BlogForm = ({ blogFormRef }) => {
         </div>
         <div className="form-control">
           <label className="label">
-            <h3 className="label-text">Author</h3>
+            <h3 className="label-text">Url</h3>
           </label>
           <input
             type="text"
